@@ -1,27 +1,19 @@
 import org.example.pages.ConstructorPage;
+import org.example.pages.LoginPage;
 import org.example.pages.RegisterPage;
 import org.example.pages.ResetPasswordPage;
-import org.junit.After;
+import org.example.steps.UserSteps;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-import static org.example.utils.URLs.LOGIN_URL;
+import static org.example.utils.URLs.CONSTRUCTOR_URL;
 import static org.junit.Assert.assertEquals;
 
-public class SignInButtonTest {
-
-    private WebDriver driver;
-
+public class SignInButtonTest extends BaseTest {
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
+        UserSteps userSteps = new UserSteps();
+        userSteps.createUser(user);
     }
 
     @Test
@@ -31,7 +23,13 @@ public class SignInButtonTest {
         constructorPage.waitMainPage();
 
         constructorPage.clickSignInButton();
-        assertEquals(LOGIN_URL, driver.getCurrentUrl());
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.waitLoginPage();
+        loginPage.signIn(user.getEmail(), user.getPassword());
+
+        constructorPage.waitMainPage();
+        assertEquals(CONSTRUCTOR_URL, driver.getCurrentUrl());
     }
 
     @Test
@@ -39,9 +37,14 @@ public class SignInButtonTest {
         ConstructorPage constructorPage = new ConstructorPage(driver);
         constructorPage.openPage();
         constructorPage.waitMainPage();
-
         constructorPage.clickUserProfileButton();
-        assertEquals(LOGIN_URL, driver.getCurrentUrl());
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.waitLoginPage();
+        loginPage.signIn(user.getEmail(), user.getPassword());
+
+        constructorPage.waitMainPage();
+        assertEquals(CONSTRUCTOR_URL, driver.getCurrentUrl());
     }
 
     @Test
@@ -49,9 +52,15 @@ public class SignInButtonTest {
         RegisterPage registerPage = new RegisterPage(driver);
         registerPage.openPage();
         registerPage.waitRegisterPage();
-
         registerPage.clickLoginButton();
-        assertEquals(LOGIN_URL, driver.getCurrentUrl());
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.waitLoginPage();
+        loginPage.signIn(user.getEmail(), user.getPassword());
+
+        ConstructorPage constructorPage = new ConstructorPage(driver);
+        constructorPage.waitMainPage();
+        assertEquals(CONSTRUCTOR_URL, driver.getCurrentUrl());
     }
 
     @Test
@@ -59,8 +68,14 @@ public class SignInButtonTest {
         ResetPasswordPage resetPasswordPage = new ResetPasswordPage(driver);
         resetPasswordPage.openPage();
         resetPasswordPage.waitResetPasswordPage();
-
         resetPasswordPage.clickSignInButton();
-        assertEquals(LOGIN_URL, driver.getCurrentUrl());
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.waitLoginPage();
+        loginPage.signIn(user.getEmail(), user.getPassword());
+
+        ConstructorPage constructorPage = new ConstructorPage(driver);
+        constructorPage.waitMainPage();
+        assertEquals(CONSTRUCTOR_URL, driver.getCurrentUrl());
     }
 }
